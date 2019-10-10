@@ -1,5 +1,6 @@
 package com.example.realmdatabaseproject.ui.mvpviews;
 
 public interface MainMvpPresenter {
-    void addNewElement(String text);
+    void addNewItemToDatabase(String text);
+    void removeItemFromDatabase(String id);
 }

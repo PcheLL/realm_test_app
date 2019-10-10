@@ -15,8 +15,13 @@ public class MainPresenter implements MainMvpPresenter {
     }
 
     @Override
-    public void addNewElement(String text) {
+    public void addNewItemToDatabase(String text) {
         mainRepository.addNewItemToDatabase(text);
+    }
+
+    @Override
+    public void removeItemFromDatabase(String id){
+        mainRepository.removeItemFromDatabase(id);
     }
 
 }

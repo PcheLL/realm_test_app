@@ -18,7 +18,6 @@ import com.example.realmdatabaseproject.ui.mvpviews.MainMvpView;
 import com.example.realmdatabaseproject.ui.presenter.MainPresenter;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -37,13 +36,14 @@ public class    MainActivity extends AppCompatActivity implements MainMvpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        initRealmConfiguration();
         mainMvpPresenter = new MainPresenter(this);
+        initRealmConfiguration();
     }
 
     private void initRealmConfiguration() {
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("userNote.realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
@@ -53,7 +53,7 @@ public class    MainActivity extends AppCompatActivity implements MainMvpView {
     private void updateList(RealmConfiguration realmConfiguration) {
         realm = Realm.getInstance(realmConfiguration);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RecyclerViewAdapter(realm.where(UserNote.class).findAll()));
+        recyclerView.setAdapter(new RecyclerViewAdapter(realm.where(UserNote.class).findAll(),mainMvpPresenter));
     }
 
     @OnClick(R.id.button)
@@ -63,7 +63,7 @@ public class    MainActivity extends AppCompatActivity implements MainMvpView {
             errorInputText();
         }
         else{
-            mainMvpPresenter.addNewElement(text);
+            mainMvpPresenter.addNewItemToDatabase(text);
             editText.setText("");
         }
     }

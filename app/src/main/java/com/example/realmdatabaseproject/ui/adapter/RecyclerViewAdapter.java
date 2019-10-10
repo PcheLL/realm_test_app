@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.realmdatabaseproject.R;
 import com.example.realmdatabaseproject.data.database.model.UserNote;
+import com.example.realmdatabaseproject.ui.mvpviews.MainMvpPresenter;
 
 import java.util.List;
 
@@ -19,17 +20,18 @@ import io.realm.RealmResults;
 
 public  class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements RealmChangeListener {
     private final RealmResults<UserNote> userNotesResults;
-
-    public RecyclerViewAdapter(RealmResults<UserNote> userNotes) {
+    private final MainMvpPresenter mainMvpPresenter;
+    public RecyclerViewAdapter(RealmResults<UserNote> userNotes, MainMvpPresenter mainMvpPresenter) {
         this.userNotesResults = userNotes;
         this.userNotesResults.addChangeListener(this);
+        this.mainMvpPresenter = mainMvpPresenter;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_note, parent, false);
-        return new ViewHolder((TextView) view);
+        return new ViewHolder((TextView) view, view);
     }
 
     @Override
@@ -55,15 +57,15 @@ public  class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapt
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textUserNote;
 
-        public ViewHolder(final TextView textView) {
+        public ViewHolder(final TextView textView,@NonNull View itemView) {
             super(textView);
-           // itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
             textUserNote = textView;
         }
 
         @Override
         public void onClick(View v) {
-
+            mainMvpPresenter.removeItemFromDatabase(userNotesResults.get(getLayoutPosition()).getKey());
         }
     }
 }
